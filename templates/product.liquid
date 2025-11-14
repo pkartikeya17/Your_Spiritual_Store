@@ -5,17 +5,13 @@
       <div class="product-gallery">
         <div class="product-main-image">
           {% if product.featured_image %}
-            {% assign img = product.featured_image %}
-
-<img
-  src="{{ img | image_url: width: 800 }}"
-  width="{{ img.width }}"
-  height="{{ img.height }}"
-  alt="{{ product.title }}"
-  loading="eager"
-  class="product-main-image"
-/>
-
+            <img
+              src="{{ product.featured_image | img_url: '800x' }}"
+              width="{{ product.featured_image.width }}"
+              height="{{ product.featured_image.height }}"
+              alt="{{ product.title }}"
+              loading="eager"
+            />
           {% endif %}
         </div>
         
@@ -23,16 +19,17 @@
           <div class="product-thumbnails">
             {% for image in product.images limit: 4 %}
               <button class="thumbnail-image {% if forloop.first %}active{% endif %}" data-full-size="{{ image | img_url: '800x' }}">
-                {% assign thumb = image %}
-
-<img
-  src="{{ thumb | image_url: width: 150 }}"
-  width="{{ thumb.width }}"
-  height="{{ thumb.height }}"
-  alt="{{ product.title }} Image {{ forloop.index }}"
-  loading="lazy"
-  class="product-thumbnail-image"
-/>
+              {%- if product.featured_image -%}
+  {% assign img = product.featured_image %}
+  <img
+    src="{{ img | image_url: width: 800 }}"
+    width="{{ img.width }}"
+    height="{{ img.height }}"
+    alt="{{ product.title }}"
+    loading="eager"
+    class="product-main-image"
+  />
+{%- endif -%}
 
               </button>
             {% endfor %}
@@ -121,65 +118,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Reels Grid Section -->
-    {% if section.settings.show_reels %}
-      <div class="product-reels-section">
-        <h2 class="section-title">See it in Action</h2>
-        <div class="reels-grid">
-          {% for block in section.blocks %}
-            {% if block.type == 'reel' %}
-              <div class="reel-item" data-reel-id="{{ block.id }}">
-                <div class="reel-thumbnail">
-                  {% if block.settings.video_url != blank %}
-                    <video 
-                      class="reel-video" 
-                      src="{{ block.settings.video_url }}" 
-                      poster="{{ block.settings.thumbnail | img_url: '400x' }}"
-                      playsinline
-                      muted
-                      loop
-                    ></video>
-                  {% elsif block.settings.thumbnail %}
-                    <img
-  src="{{ thumb | image_url: width: 300 }}"
-  srcset="
-    {{ thumb | image_url: width: 150 }} 150w,
-    {{ thumb | image_url: width: 300 }} 300w,
-    {{ thumb | image_url: width: 600 }} 600w
-  "
-  sizes="(max-width: 768px) 50vw, 200px"
-  width="{{ thumb.width }}"
-  height="{{ thumb.height }}"
-  alt="Product reel"
-  loading="lazy"
-  class="reel-thumbnail"
-/>
-
-                  {% else %}
-                    <div class="reel-placeholder">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                      </svg>
-                    </div>
-                  {% endif %}
-                  <div class="reel-overlay">
-                    <button class="play-btn" aria-label="Play video">
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
-                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-                {% if block.settings.reel_title %}
-                  <p class="reel-title">{{ block.settings.reel_title }}</p>
-                {% endif %}
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-    {% endif %}
 
     <!-- Product Details Tabs -->
     <div class="product-tabs">
@@ -429,84 +367,6 @@
     font-size: 0.9rem;
   }
 
-  /* Reels Grid */
-  .product-reels-section {
-    margin: 4rem 0;
-  }
-
-  .section-title {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-
-  .reels-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .reel-item {
-    cursor: pointer;
-  }
-
-  .reel-thumbnail {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    aspect-ratio: 9/16;
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-
-  .reel-video,
-  .reel-thumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .reel-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-accent);
-  }
-
-  .reel-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .reel-item:hover .reel-overlay {
-    opacity: 1;
-  }
-
-  .play-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
-  }
-
-  .reel-item:hover .play-btn {
-    transform: scale(1);
-  }
-
-  .reel-title {
-    margin-top: 0.75rem;
-    font-size: 0.95rem;
-    text-align: center;
-  }
-
-  /* Product Tabs */
   .product-tabs {
     margin-top: 4rem;
   }
@@ -576,11 +436,6 @@
       font-size: 2rem;
     }
 
-    .reels-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
-
     .tab-buttons {
       overflow-x: auto;
     }
@@ -624,27 +479,6 @@
     });
   });
 
-  // Reel video preview
-  const reelItems = document.querySelectorAll('.reel-item');
-
-  reelItems.forEach(item => {
-    const video = item.querySelector('.reel-video');
-
-    item.addEventListener('mouseenter', () => {
-      video?.play();
-    });
-
-    item.addEventListener('mouseleave', () => {
-      video?.pause();
-      if (video) video.currentTime = 0;
-    });
-
-    item.addEventListener('click', () => {
-      // Open video in fullscreen or modal
-      video?.requestFullscreen?.();
-    });
-  });
-
   // Add to cart
   const productForm = document.getElementById('productForm');
 
@@ -660,40 +494,3 @@
     }
   });
 </script>
-
-{% schema %}
-{
-  "name": "Product",
-  "settings": [
-    {
-      "type": "checkbox",
-      "id": "show_reels",
-      "label": "Show Reels Section",
-      "default": true
-    }
-  ],
-  "blocks": [
-    {
-      "type": "reel",
-      "name": "Product Reel",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "thumbnail",
-          "label": "Thumbnail Image"
-        },
-        {
-          "type": "url",
-          "id": "video_url",
-          "label": "Video URL"
-        },
-        {
-          "type": "text",
-          "id": "reel_title",
-          "label": "Reel Title"
-        }
-      ]
-    }
-  ]
-}
-{% endschema %}
