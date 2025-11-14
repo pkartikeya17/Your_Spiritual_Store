@@ -5,7 +5,17 @@
       <div class="product-gallery">
         <div class="product-main-image">
           {% if product.featured_image %}
-            <img src="{{ product.featured_image | img_url: '800x' }}" alt="{{ product.title }}" loading="eager">
+            {% assign img = product.featured_image %}
+
+<img
+  src="{{ img | image_url: width: 800 }}"
+  width="{{ img.width }}"
+  height="{{ img.height }}"
+  alt="{{ product.title }}"
+  loading="eager"
+  class="product-main-image"
+/>
+
           {% endif %}
         </div>
         
@@ -13,7 +23,17 @@
           <div class="product-thumbnails">
             {% for image in product.images limit: 4 %}
               <button class="thumbnail-image {% if forloop.first %}active{% endif %}" data-full-size="{{ image | img_url: '800x' }}">
-                <img src="{{ image | img_url: '150x' }}" alt="{{ product.title }} - Image {{ forloop.index }}">
+                {% assign thumb = image %}
+
+<img
+  src="{{ thumb | image_url: width: 150 }}"
+  width="{{ thumb.width }}"
+  height="{{ thumb.height }}"
+  alt="{{ product.title }} Image {{ forloop.index }}"
+  loading="lazy"
+  class="product-thumbnail-image"
+/>
+
               </button>
             {% endfor %}
           </div>
@@ -121,7 +141,21 @@
                       loop
                     ></video>
                   {% elsif block.settings.thumbnail %}
-                    <img src="{{ block.settings.thumbnail | img_url: '400x' }}" alt="Product reel">
+                    <img
+  src="{{ thumb | image_url: width: 300 }}"
+  srcset="
+    {{ thumb | image_url: width: 150 }} 150w,
+    {{ thumb | image_url: width: 300 }} 300w,
+    {{ thumb | image_url: width: 600 }} 600w
+  "
+  sizes="(max-width: 768px) 50vw, 200px"
+  width="{{ thumb.width }}"
+  height="{{ thumb.height }}"
+  alt="Product reel"
+  loading="lazy"
+  class="reel-thumbnail"
+/>
+
                   {% else %}
                     <div class="reel-placeholder">
                       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

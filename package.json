@@ -1,0 +1,39 @@
+{
+  "name": "mysticaura-shopify-theme",
+  "version": "1.0.0",
+  "description": "Premium Shopify theme for spiritual products with dark mode and AI chatbot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "theme watch",
+    "deploy": "theme deploy",
+    "download": "theme download",
+    "lint": "eslint assets/**/*.js"
+  },
+  "keywords": [
+    "shopify",
+    "theme",
+    "ecommerce",
+    "spiritual",
+    "crystals",
+    "dark-mode",
+    "chatbot",
+    "gemini"
+  ],
+  "author": "MysticAura Dev Team",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "@shopify/themekit": "^1.1.9",
+    "eslint": "^8.50.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/mysticaura-theme"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/mysticaura-theme/issues"
+  },
+  "homepage": "https://github.com/yourusername/mysticaura-theme#readme"
+
+}

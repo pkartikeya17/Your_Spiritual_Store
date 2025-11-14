@@ -1,0 +1,87 @@
+<!-- SEO Meta Tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:title" content="{{ page_title }}">
+{% if page_description %}
+  <meta property="og:description" content="{{ page_description | escape }}">
+{% endif %}
+{% if page_image %}
+  <meta property="og:image" content="https:{{ page_image | img_url: '1200x630' }}">
+{% elsif settings.share_image %}
+  <meta property="og:image" content="https:{{ settings.share_image | img_url: '1200x630' }}">
+{% endif %}
+<meta property="og:site_name" content="{{ shop.name }}">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ canonical_url }}">
+<meta property="twitter:title" content="{{ page_title }}">
+{% if page_description %}
+  <meta property="twitter:description" content="{{ page_description | escape }}">
+{% endif %}
+{% if page_image %}
+  <meta property="twitter:image" content="https:{{ page_image | img_url: '1200x630' }}">
+{% elsif settings.share_image %}
+  <meta property="twitter:image" content="https:{{ settings.share_image | img_url: '1200x630' }}">
+{% endif %}
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "{{ shop.name }}",
+  "url": "{{ shop.url }}",
+  {% if settings.logo %}
+    "logo": "https:{{ settings.logo | img_url: 'master' }}",
+  {% endif %}
+  "sameAs": [
+    {% if settings.social_facebook != blank %}"{{ settings.social_facebook }}",{% endif %}
+    {% if settings.social_twitter != blank %}"{{ settings.social_twitter }}",{% endif %}
+    {% if settings.social_instagram != blank %}"{{ settings.social_instagram }}"{% endif %}
+  ]
+}
+</script>
+
+{% if template contains 'product' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "{{ product.title | escape }}",
+  "description": "{{ product.description | strip_html | escape }}",
+  "image": "https:{{ product.featured_image | img_url: 'grande' }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "{{ product.vendor | escape }}"
+  },
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "{{ shop.currency }}",
+    "price": "{{ product.price | money_without_currency }}",
+    "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "url": "{{ shop.url }}{{ product.url }}"
+  }
+}
+</script>
+{% endif %}
+
+<!-- Gemini API Key Meta Tag -->
+{% if settings.gemini_api_key != blank %}
+  <meta name="gemini-api-key" content="{{ settings.gemini_api_key }}">
+{% endif %}
+
+<!-- Preconnect to external resources -->
+<link rel="preconnect" href="https://cdn.shopify.com">
+<link rel="dns-prefetch" href="https://cdn.shopify.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Theme color for mobile browsers -->
+<meta name="theme-color" content="#8b7355">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">

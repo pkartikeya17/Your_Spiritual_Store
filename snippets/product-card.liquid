@@ -2,11 +2,17 @@
   <a href="{{ product.url }}" class="product-card-link">
     <div class="product-card-image">
       {% if product.featured_image %}
-        <img 
-          src="{{ product.featured_image | img_url: '400x' }}" 
-          alt="{{ product.title }}"
-          loading="lazy"
-        >
+        {% if product.featured_image %}
+  <img
+    src="{{ product.featured_image | img_url: '400x' }}"
+    width="{{ product.featured_image.width }}"
+    height="{{ product.featured_image.height }}"
+    alt="{{ product.title }}"
+    loading="lazy"
+    class="product-card-image"
+  />
+{% endif %}
+
       {% else %}
         <div class="product-placeholder">
           <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

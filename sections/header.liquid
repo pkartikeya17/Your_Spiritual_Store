@@ -12,7 +12,15 @@
       <div class="header-logo">
         <a href="/" class="logo-link">
           {% if section.settings.logo != blank %}
-            <img src="{{ section.settings.logo | img_url: '200x' }}" alt="{{ shop.name }}" class="logo-image">
+            <img
+               src="{{ section.settings.logo | img_url: '200xx200' }}"
+               width="200"
+               height="200"
+               alt="{{ shop.name }}"
+               class="logo-image"
+               loading="eager"
+           />
+
           {% else %}
             <h1 class="site-title">{{ shop.name }}</h1>
           {% endif %}

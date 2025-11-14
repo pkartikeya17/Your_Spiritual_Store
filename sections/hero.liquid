@@ -11,7 +11,16 @@
     
     {% if section.settings.hero_image %}
       <div class="hero-image">
-        <img src="{{ section.settings.hero_image | img_url: '1200x' }}" alt="{{ section.settings.hero_title }}">
+        {% assign hero = section.settings.hero_image %}
+
+<img
+  src="{{ hero | img_url: '1200x' }}"
+  width="{{ hero.width }}"
+  height="{{ hero.height }}"
+  alt="{{ section.settings.hero_title }}"
+  class="hero-image"
+/>
+
       </div>
     {% endif %}
   </div>
