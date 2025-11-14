@@ -1,0 +1,356 @@
+<!-- Chatbot Widget -->
+<div class="chatbot-widget" id="chatbotWidget">
+  <!-- Chat Button -->
+  <button class="chat-button" id="chatButton" aria-label="Open chat">
+    <svg class="chat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+
+  <!-- Chat Window -->
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <h3>MysticAura Assistant</h3>
+        <p class="chat-status">
+          <span class="status-dot"></span>
+          Online
+        </p>
+      </div>
+      <button class="chat-close" id="chatCloseBtn" aria-label="Close chat">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot-message">
+        <div class="message-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="10"></circle>
+          </svg>
+        </div>
+        <div class="message-content">
+          <p>Welcome to MysticAura! I'm here to help you discover the perfect spiritual items. How can I assist you today?</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input-wrapper">
+      <div class="chat-input-container">
+        <input 
+          type="text" 
+          class="chat-input" 
+          id="chatInput" 
+          placeholder="Type your message..."
+          autocomplete="off"
+        >
+        <button class="chat-send" id="chatSend" aria-label="Send message">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .chatbot-widget {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    font-family: var(--font-body);
+  }
+
+  .chat-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent) 0%, #a67c52 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .chat-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .chat-button .close-icon {
+    display: none;
+  }
+
+  .chat-button.active .chat-icon {
+    display: none;
+  }
+
+  .chat-button.active .close-icon {
+    display: block;
+  }
+
+  .chat-window {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 380px;
+    height: 550px;
+    background-color: var(--color-bg);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .chat-window.active {
+    display: flex;
+  }
+
+  .chat-header {
+    background: linear-gradient(135deg, var(--color-accent) 0%, #a67c52 100%);
+    color: white;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .chat-header-info h3 {
+    font-size: 1.1rem;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .chat-status {
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.9;
+    margin: 0;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #4ade80;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .chat-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .chat-close:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .message {
+    display: flex;
+    gap: 0.75rem;
+    animation: messageSlide 0.3s ease;
+  }
+
+  @keyframes messageSlide {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .message-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .bot-message .message-avatar {
+    background: linear-gradient(135deg, var(--color-accent) 0%, #a67c52 100%);
+    color: white;
+  }
+
+  .user-message {
+    flex-direction: row-reverse;
+  }
+
+  .user-message .message-avatar {
+    background-color: rgba(139, 115, 85, 0.2);
+    color: var(--color-accent);
+  }
+
+  .message-content {
+    flex: 1;
+    background-color: rgba(139, 115, 85, 0.1);
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    max-width: 75%;
+  }
+
+  .user-message .message-content {
+    background: linear-gradient(135deg, var(--color-accent) 0%, #a67c52 100%);
+    color: white;
+  }
+
+  .message-content p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .typing-indicator {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .typing-indicator .message-content {
+    display: flex;
+    gap: 4px;
+    padding: 1rem;
+  }
+
+  .typing-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-accent);
+    border-radius: 50%;
+    animation: typingBounce 1.4s infinite;
+  }
+
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-10px); }
+  }
+
+  .chat-input-wrapper {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 1rem 1.5rem;
+  }
+
+  [data-theme="dark"] .chat-input-wrapper {
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .chat-input-container {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .chat-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 24px;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+
+  [data-theme="dark"] .chat-input {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .chat-input:focus {
+    border-color: var(--color-accent);
+  }
+
+  .chat-send {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent) 0%, #a67c52 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+  }
+
+  .chat-send:hover {
+    transform: scale(1.05);
+  }
+
+  .chat-send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 480px) {
+    .chatbot-widget {
+      bottom: 16px;
+      right: 16px;
+    }
+
+    .chat-window {
+      width: calc(100vw - 32px);
+      height: calc(100vh - 120px);
+      bottom: 76px;
+      right: -8px;
+    }
+
+    .chat-button {
+      width: 56px;
+      height: 56px;
+    }
+  }
+</style>
+
+<script>
+  {{ 'chatbot.js' | asset_url | script_tag }}
+</script>

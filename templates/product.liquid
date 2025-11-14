@@ -1,0 +1,665 @@
+<div class="product-page">
+  <div class="container section-padding">
+    <div class="product-main">
+      <!-- Product Images -->
+      <div class="product-gallery">
+        <div class="product-main-image">
+          {% if product.featured_image %}
+            <img src="{{ product.featured_image | img_url: '800x' }}" alt="{{ product.title }}" loading="eager">
+          {% endif %}
+        </div>
+        
+        {% if product.images.size > 1 %}
+          <div class="product-thumbnails">
+            {% for image in product.images limit: 4 %}
+              <button class="thumbnail-image {% if forloop.first %}active{% endif %}" data-full-size="{{ image | img_url: '800x' }}">
+                <img src="{{ image | img_url: '150x' }}" alt="{{ product.title }} - Image {{ forloop.index }}">
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info">
+        <h1 class="product-title">{{ product.title }}</h1>
+        
+        {% if product.vendor %}
+          <p class="product-vendor">by {{ product.vendor }}</p>
+        {% endif %}
+
+        <div class="product-price">
+          <span class="price">{{ product.price | money }}</span>
+          {% if product.compare_at_price > product.price %}
+            <span class="compare-price">{{ product.compare_at_price | money }}</span>
+            <span class="price-badge">Save {{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price }}%</span>
+          {% endif %}
+        </div>
+
+        <div class="product-description">
+          {{ product.description }}
+        </div>
+
+        <!-- Product Form -->
+        {% form 'product', product, id: 'productForm' %}
+          {% if product.variants.size > 1 %}
+            <div class="product-variants">
+              <label for="productSelect">Variant</label>
+              <select name="id" id="productSelect" class="variant-select">
+                {% for variant in product.variants %}
+                  <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %}>
+                    {{ variant.title }} - {{ variant.price | money }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          {% else %}
+            <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+          {% endif %}
+
+          <div class="product-quantity">
+            <label for="quantity">Quantity</label>
+            <div class="quantity-selector">
+              <button type="button" class="qty-btn" id="qtyMinus">-</button>
+              <input type="number" name="quantity" id="quantity" value="1" min="1" class="qty-input">
+              <button type="button" class="qty-btn" id="qtyPlus">+</button>
+            </div>
+          </div>
+
+          <button type="submit" name="add" class="btn-add-to-cart">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            Add to Cart
+          </button>
+        {% endform %}
+
+        <!-- Product Features -->
+        <div class="product-features">
+          <div class="feature-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            </svg>
+            <span>Free Shipping</span>
+          </div>
+          <div class="feature-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span>Authentic Products</span>
+          </div>
+          <div class="feature-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>7-Day Returns</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reels Grid Section -->
+    {% if section.settings.show_reels %}
+      <div class="product-reels-section">
+        <h2 class="section-title">See it in Action</h2>
+        <div class="reels-grid">
+          {% for block in section.blocks %}
+            {% if block.type == 'reel' %}
+              <div class="reel-item" data-reel-id="{{ block.id }}">
+                <div class="reel-thumbnail">
+                  {% if block.settings.video_url != blank %}
+                    <video 
+                      class="reel-video" 
+                      src="{{ block.settings.video_url }}" 
+                      poster="{{ block.settings.thumbnail | img_url: '400x' }}"
+                      playsinline
+                      muted
+                      loop
+                    ></video>
+                  {% elsif block.settings.thumbnail %}
+                    <img src="{{ block.settings.thumbnail | img_url: '400x' }}" alt="Product reel">
+                  {% else %}
+                    <div class="reel-placeholder">
+                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                      </svg>
+                    </div>
+                  {% endif %}
+                  <div class="reel-overlay">
+                    <button class="play-btn" aria-label="Play video">
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                {% if block.settings.reel_title %}
+                  <p class="reel-title">{{ block.settings.reel_title }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Product Details Tabs -->
+    <div class="product-tabs">
+      <div class="tab-buttons">
+        <button class="tab-btn active" data-tab="details">Details</button>
+        <button class="tab-btn" data-tab="shipping">Shipping</button>
+        <button class="tab-btn" data-tab="reviews">Reviews</button>
+      </div>
+
+      <div class="tab-content">
+        <div class="tab-panel active" id="details">
+          <h3>Product Details</h3>
+          {{ product.description }}
+        </div>
+
+        <div class="tab-panel" id="shipping">
+          <h3>Shipping Information</h3>
+          <p>We offer free shipping on orders over ₹999. Standard delivery takes 5-7 business days.</p>
+          <ul>
+            <li>Free shipping on orders above ₹999</li>
+            <li>Express shipping available</li>
+            <li>Tracking provided for all orders</li>
+            <li>Secure packaging guaranteed</li>
+          </ul>
+        </div>
+
+        <div class="tab-panel" id="reviews">
+          <h3>Customer Reviews</h3>
+          <p>Be the first to review this product!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .product-page {
+    min-height: 60vh;
+  }
+
+  .product-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-bottom: 4rem;
+  }
+
+  .product-gallery {
+    position: sticky;
+    top: 120px;
+    height: fit-content;
+  }
+
+  .product-main-image {
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: rgba(139, 115, 85, 0.05);
+    margin-bottom: 1rem;
+  }
+
+  .product-main-image img {
+    width: 100%;
+    height: auto;
+    transition: opacity 0.3s ease;
+  }
+
+  .product-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+  }
+
+  .thumbnail-image {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    background: none;
+    padding: 0;
+  }
+
+  .thumbnail-image:hover,
+  .thumbnail-image.active {
+    border-color: var(--color-accent);
+  }
+
+  .thumbnail-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .product-title {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-vendor {
+    font-size: 0.95rem;
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .product-price {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+
+  .compare-price {
+    font-size: 1.5rem;
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+
+  .price-badge {
+    background-color: #22c55e;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .product-description {
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  .product-variants,
+  .product-quantity {
+    margin-bottom: 1.5rem;
+  }
+
+  .product-variants label,
+  .product-quantity label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .variant-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: fit-content;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .qty-btn {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    color: var(--color-text);
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .qty-btn:hover {
+    background-color: rgba(139, 115, 85, 0.1);
+  }
+
+  .qty-input {
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: transparent;
+    color: var(--color-text);
+    font-size: 1rem;
+  }
+
+  .qty-input::-webkit-inner-spin-button,
+  .qty-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .btn-add-to-cart {
+    width: 100%;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--color-accent) 0%, #a67c52 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 2rem;
+  }
+
+  .btn-add-to-cart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 115, 85, 0.3);
+  }
+
+  .product-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .feature-item svg {
+    color: var(--color-accent);
+  }
+
+  .feature-item span {
+    font-size: 0.9rem;
+  }
+
+  /* Reels Grid */
+  .product-reels-section {
+    margin: 4rem 0;
+  }
+
+  .section-title {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .reels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .reel-item {
+    cursor: pointer;
+  }
+
+  .reel-thumbnail {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 9/16;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .reel-video,
+  .reel-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .reel-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
+  }
+
+  .reel-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .reel-item:hover .reel-overlay {
+    opacity: 1;
+  }
+
+  .play-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+  }
+
+  .reel-item:hover .play-btn {
+    transform: scale(1);
+  }
+
+  .reel-title {
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  /* Product Tabs */
+  .product-tabs {
+    margin-top: 4rem;
+  }
+
+  .tab-buttons {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .tab-btn {
+    padding: 1rem 2rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--color-text);
+    opacity: 0.6;
+  }
+
+  .tab-btn.active {
+    border-bottom-color: var(--color-accent);
+    opacity: 1;
+  }
+
+  .tab-content {
+    padding: 2rem 0;
+  }
+
+  .tab-panel {
+    display: none;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+
+  .tab-panel h3 {
+    margin-bottom: 1.5rem;
+  }
+
+  .tab-panel ul {
+    list-style-position: inside;
+    line-height: 2;
+  }
+
+  @media (max-width: 1024px) {
+    .product-main {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .product-gallery {
+      position: static;
+    }
+
+    .product-features {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .product-title {
+      font-size: 2rem;
+    }
+
+    .reels-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .tab-buttons {
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      white-space: nowrap;
+    }
+  }
+</style>
+
+<script>
+  // Quantity controls
+  const qtyMinus = document.getElementById('qtyMinus');
+  const qtyPlus = document.getElementById('qtyPlus');
+  const qtyInput = document.getElementById('quantity');
+
+  qtyMinus?.addEventListener('click', () => {
+    const current = parseInt(qtyInput.value);
+    if (current > 1) qtyInput.value = current - 1;
+  });
+
+  qtyPlus?.addEventListener('click', () => {
+    const current = parseInt(qtyInput.value);
+    qtyInput.value = current + 1;
+  });
+
+  // Tab functionality
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetTab = btn.dataset.tab;
+
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabPanels.forEach(p => p.classList.remove('active'));
+
+      btn.classList.add('active');
+      document.getElementById(targetTab)?.classList.add('active');
+    });
+  });
+
+  // Reel video preview
+  const reelItems = document.querySelectorAll('.reel-item');
+
+  reelItems.forEach(item => {
+    const video = item.querySelector('.reel-video');
+
+    item.addEventListener('mouseenter', () => {
+      video?.play();
+    });
+
+    item.addEventListener('mouseleave', () => {
+      video?.pause();
+      if (video) video.currentTime = 0;
+    });
+
+    item.addEventListener('click', () => {
+      // Open video in fullscreen or modal
+      video?.requestFullscreen?.();
+    });
+  });
+
+  // Add to cart
+  const productForm = document.getElementById('productForm');
+
+  productForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(productForm);
+    const variantId = formData.get('id');
+    const quantity = parseInt(formData.get('quantity'));
+
+    if (window.cartManager) {
+      await window.cartManager.addToCart(variantId, quantity);
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_reels",
+      "label": "Show Reels Section",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "reel",
+      "name": "Product Reel",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "thumbnail",
+          "label": "Thumbnail Image"
+        },
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Video URL"
+        },
+        {
+          "type": "text",
+          "id": "reel_title",
+          "label": "Reel Title"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

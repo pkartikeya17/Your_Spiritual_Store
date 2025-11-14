@@ -1,0 +1,93 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "MysticAura",
+    "theme_version": "1.0.0",
+    "theme_author": "Custom",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Light Mode Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_light_bg",
+        "label": "Background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_light_text",
+        "label": "Text Color",
+        "default": "#1a1a1a"
+      },
+      {
+        "type": "color",
+        "id": "color_light_accent",
+        "label": "Accent Color",
+        "default": "#8b7355"
+      },
+      {
+        "type": "header",
+        "content": "Dark Mode Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_dark_bg",
+        "label": "Background",
+        "default": "#1a1a1a"
+      },
+      {
+        "type": "color",
+        "id": "color_dark_text",
+        "label": "Text Color",
+        "default": "#f5f5f5"
+      },
+      {
+        "type": "color",
+        "id": "color_dark_accent",
+        "label": "Accent Color",
+        "default": "#c9a882"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Heading Font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Body Font",
+        "default": "assistant_n4"
+      }
+    ]
+  },
+  {
+    "name": "Chatbot",
+    "settings": [
+      {
+        "type": "text",
+        "id": "gemini_api_key",
+        "label": "Gemini API Key",
+        "info": "Enter your Google Gemini API key"
+      },
+      {
+        "type": "checkbox",
+        "id": "chatbot_enabled",
+        "label": "Enable Chatbot",
+        "default": true
+      }
+    ]
+  }
+]
